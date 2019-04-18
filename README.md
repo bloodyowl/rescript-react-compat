@@ -2,6 +2,20 @@
 
 > An alternative upgrade path for ReasonReact
 
+## Installation
+
+```console
+$ yarn add reason-react-compat
+```
+
+or
+
+```console
+$ npm install --save reason-react-compat
+```
+
+Then add `reason-react-compat` to your `bsconfig.json` `bs-dependencies` field.
+
 ## ReactCompat.useRecordApi
 
 Enables you to wrap your existing `ReasonReact.statelessComponent` and `ReasonReact.reducerComponent` through a React hook.
@@ -27,7 +41,7 @@ For implementation files (`.re`)
 
 ```diff
  let component = ReasonReact.statelessComponent("MyComponent");
- 
+
 +[@react.component]
 - let make = _ => {
 + let make = () => {
@@ -44,7 +58,7 @@ For implementation files (`.re`)
 For interface files (`.rei`)
 
 ```diff
- 
+
 +[@react.component]
 - let make = _ =>
 + let make = unit =>
@@ -66,7 +80,7 @@ For implementation files (`.re`)
  type state = {count: int};
 
  let component = ReasonReact.reducerComponent("MyComponent");
- 
+
 +[@react.component]
 - let make = _ => {
 + let make = () => {
