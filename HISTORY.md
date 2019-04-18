@@ -1,3 +1,9 @@
+## 0.2.0
+
+Changes:
+
+- Remove namespace
+
 ## 0.1.1
 
 Fixes:
