@@ -1,3 +1,9 @@
+## 0.4.0
+
+Changes:
+
+- Use useEffect instead of useLayoutEffect
+
 ## 0.3.0
 
 Fixes:
