@@ -18,7 +18,7 @@ let useRecordApi = componentSpec => {
 
   let ({state, sideEffects}, send) =
     React.useReducer(
-      (fullState, action) => {
+      (fullState, action) =>
         /**
           Keep fullState.state in a ref so that willReceiveProps can alter it.
           It's the only place we let it be altered.
@@ -26,25 +26,30 @@ let useRecordApi = componentSpec => {
           It's important that the reducer only **creates new refs** an doesn't alter them,
           otherwise React wouldn't be able to rollback state in concurrent mode.
          */
-        switch (componentSpec.reducer(action, fullState.state^)) {
-        | NoUpdate => fullState /* useReducer returns of the same value will not rerender the component */
-        | Update(state) => {...fullState, state: ref(state)}
-        | SideEffects(sideEffect) => {
-            ...fullState,
-            sideEffects:
-              ref(Js.Array.concat(fullState.sideEffects^, [|sideEffect|])),
+        (
+          switch (componentSpec.reducer(action, fullState.state^)) {
+          | NoUpdate => fullState /* useReducer returns of the same value will not rerender the component */
+          | Update(state) => {...fullState, state: ref(state)}
+          | SideEffects(sideEffect) => {
+              ...fullState,
+              sideEffects:
+                ref(
+                  Js.Array.concat(fullState.sideEffects^, [|sideEffect|]),
+                ),
+            }
+          | UpdateWithSideEffects(state, sideEffect) => {
+              sideEffects:
+                ref(
+                  Js.Array.concat(fullState.sideEffects^, [|sideEffect|]),
+                ),
+              state: ref(state),
+            }
           }
-        | UpdateWithSideEffects(state, sideEffect) => {
-            sideEffects:
-              ref(Js.Array.concat(fullState.sideEffects^, [|sideEffect|])),
-            state: ref(state),
-          }
-        };
-      },
+        ),
       {sideEffects: ref([||]), state: ref(initialState)},
     );
 
-  /** This is the temp self for willReceiveProps */ 
+  /** This is the temp self for willReceiveProps */
   let rec self = {
     handle: (fn, payload) => fn(payload, self),
     retainedProps: componentSpec.retainedProps,
@@ -58,7 +63,8 @@ let useRecordApi = componentSpec => {
 
   /** There might be some potential issues with willReceiveProps,
       treat it as it if was getDerivedStateFromProps. */
-  state := componentSpec.willReceiveProps(self);
+  state :=
+    componentSpec.willReceiveProps(self);
 
   let rec self = {
     handle: (fn, payload) => fn(payload, self),
@@ -95,7 +101,7 @@ let useRecordApi = componentSpec => {
       None;
     });
 
-  /** Because sideEffects are only added through a **new** ref, 
+  /** Because sideEffects are only added through a **new** ref,
       we can use the ref itself as the dependency. This way the
       effect doesn't re-run after a cleanup.
   */
@@ -114,7 +120,6 @@ let useRecordApi = componentSpec => {
     React.useRef(React.useMemo0(() => componentSpec.render(self)));
 
   if (hasBeenCalled->current
-      && oldSelf->current.state !== self.state
       && componentSpec.shouldUpdate({
            oldSelf: oldSelf->current,
            newSelf: self,
