@@ -1,3 +1,9 @@
+## 0.3.0
+
+Fixes:
+
+- Remove buggy condition that'd prevent re-render
+
 ## 0.2.0
 
 Changes:
