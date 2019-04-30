@@ -78,7 +78,7 @@ let useRecordApi = componentSpec => {
   let oldSelf = React.useRef(self);
 
   let _mountUnmountEffect =
-    React.useLayoutEffect0(() => {
+    React.useEffect0(() => {
       componentSpec.didMount(self);
       Some(
         () => {
@@ -91,7 +91,7 @@ let useRecordApi = componentSpec => {
     });
 
   let _didUpdateEffect =
-    React.useLayoutEffect(() => {
+    React.useEffect(() => {
       if (hasBeenCalled->current) {
         componentSpec.didUpdate({oldSelf: oldSelf->current, newSelf: self});
       } else {
