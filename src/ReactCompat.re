@@ -1,12 +1,38 @@
-/* For now, we'll use the existing building blocks in ReasonReact,
-   but we might internalize them in the future. */
-open ReasonReact;
+type component('state, 'initialState, 'action) = {
+  willReceiveProps: self('state, 'action) => 'state,
+  willUnmount: self('state, 'action) => unit,
+  didUpdate: oldNewSelf('state, 'action) => unit,
+  shouldUpdate: oldNewSelf('state, 'action) => bool,
+  willUpdate: oldNewSelf('state, 'action) => unit,
+  didMount: self('state, 'action) => unit,
+  initialState: unit => 'initialState,
+  reducer: ('action, 'state) => update('state, 'action),
+  render: self('state, 'action) => React.element,
+}
+and update('state, 'action) =
+  | NoUpdate
+  | Update('state)
+  | SideEffects(self('state, 'action) => unit)
+  | UpdateWithSideEffects('state, self('state, 'action) => unit)
+and self('state, 'action) = {
+  handle:
+    'payload.
+    (('payload, self('state, 'action)) => unit, 'payload) => unit,
+
+  state: 'state,
+  send: 'action => unit,
+  onUnmount: (unit => unit) => unit,
+}
+and oldNewSelf('state, 'action) = {
+  oldSelf: self('state, 'action),
+  newSelf: self('state, 'action),
+};
 
 /** This is not exposed, only used internally so that useReducer can
     return side-effects to run later.
   */
-type fullState('state, 'retainedProps, 'action) = {
-  sideEffects: ref(array(self('state, 'retainedProps, 'action) => unit)),
+type fullState('state, 'action) = {
+  sideEffects: ref(array(self('state, 'action) => unit)),
   state: ref('state),
 };
 
@@ -52,7 +78,6 @@ let useRecordApi = componentSpec => {
   /** This is the temp self for willReceiveProps */
   let rec self = {
     handle: (fn, payload) => fn(payload, self),
-    retainedProps: componentSpec.retainedProps,
     send,
     state: state^,
     onUnmount: sideEffect =>
@@ -68,7 +93,6 @@ let useRecordApi = componentSpec => {
 
   let rec self = {
     handle: (fn, payload) => fn(payload, self),
-    retainedProps: componentSpec.retainedProps,
     send,
     state: state^,
     onUnmount: sideEffect =>
@@ -128,4 +152,27 @@ let useRecordApi = componentSpec => {
     mostRecentAllowedRender->setCurrent(componentSpec.render(self));
   };
   mostRecentAllowedRender->current;
+};
+
+module Defaults = {
+  let anyToUnit = _ => ();
+  let anyToTrue = _ => true;
+  let willReceivePropsDefault: self('state, 'action) => 'state =
+    ({state}) => state;
+  let renderDefault = _self => React.string("RenderNotImplemented");
+  let initialStateDefault = () => ();
+  let reducerDefault: ('action, 'state) => update('state, 'action) =
+    (_action, _state) => NoUpdate;
+};
+
+let component: component('state, 'initialState, 'action) = {
+  didMount: Defaults.anyToUnit,
+  willReceiveProps: Defaults.willReceivePropsDefault,
+  didUpdate: Defaults.anyToUnit,
+  willUnmount: Defaults.anyToUnit,
+  willUpdate: Defaults.anyToUnit,
+  shouldUpdate: Defaults.anyToTrue,
+  render: Defaults.renderDefault,
+  initialState: Defaults.initialStateDefault,
+  reducer: Defaults.reducerDefault,
 };
