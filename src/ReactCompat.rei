@@ -31,3 +31,5 @@ and oldNewSelf('state, 'action) = {
 let useRecordApi: component('state, 'state, 'action) => React.element;
 
 let component: component('state, unit, 'action);
+
+let useMount: (unit => unit) => unit;

@@ -180,3 +180,10 @@ let component: component('state, 'initialState, 'action) = {
   initialState: Defaults.initialStateDefault,
   reducer: Defaults.reducerDefault,
 };
+
+let useMount = func => {
+  React.useEffect0(() => {
+    func();
+    None;
+  });
+};
