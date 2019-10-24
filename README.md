@@ -21,12 +21,10 @@ Then add `reason-react-compat` to your `bsconfig.json` `bs-dependencies` field.
 Enables you to wrap your existing `ReasonReact.statelessComponent` and `ReasonReact.reducerComponent` through a React hook.
 
 ```reason
-let component = ReasonReact.statelessComponent("MyComponent");
-
 [@react.component]
 let make = () => {
   ReactCompat.useRecordApi({
-    ...component,
+    ...ReactCompat.component,
     render: _ =>
       <div> "Helloworld!"->ReasonReact.string </div>
   })
@@ -40,14 +38,15 @@ let make = () => {
 For implementation files (`.re`)
 
 ```diff
- let component = ReasonReact.statelessComponent("MyComponent");
+-let component = ReasonReact.statelessComponent("MyComponent");
 
 +[@react.component]
 - let make = _ => {
 + let make = () => {
 +  ReactCompat.useRecordApi(
      {
-       ...component,
+-      ...component,
++      ...ReactCompat.component,
        render: _ =>
          <div> "Helloworld!"->ReasonReact.string </div>
      }
@@ -60,7 +59,7 @@ For interface files (`.rei`)
 ```diff
 
 +[@react.component]
-- let make = _ =>
+- let make = 'a =>
 + let make = unit =>
 -  ReasonReact.component(
 -    ReasonReact.stateless,
@@ -79,14 +78,15 @@ For implementation files (`.re`)
 
  type state = {count: int};
 
- let component = ReasonReact.reducerComponent("MyComponent");
+-let component = ReasonReact.reducerComponent("MyComponent");
 
 +[@react.component]
 - let make = _ => {
 + let make = () => {
 +  ReactCompat.useRecordApi(
      {
-       ...component,
+-      ...component,
++      ...ReactCompat.component,
        /* some lifecycle */
        render: _ =>
          <div> "Helloworld!"->ReasonReact.string </div>
@@ -94,6 +94,13 @@ For implementation files (`.re`)
 +  )
  }
 ```
+
+You'll also need to rename:
+
+- `ReasonReact.Update` -> `Update`
+- `ReasonReact.UpdateWithSideEffects` -> `UpdateWithSideEffects`
+- `ReasonReact.SideEffects` -> `SideEffects`
+- `ReasonReact.NoUpdate` -> `NoUpdate`
 
 For interface files (`.rei`)
 
@@ -103,7 +110,7 @@ For interface files (`.rei`)
 -type action;
 
 +[@react.component]
-- let make = _ =>
+- let make = 'a =>
 + let make = unit =>
 -  ReasonReact.component(
 -    state,
