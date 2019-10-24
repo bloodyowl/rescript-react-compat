@@ -84,6 +84,8 @@ let useRecordApi = componentSpec => {
       Js.Array.push(sideEffect, unmountSideEffects->current)->ignore,
   };
 
+  let upToDateSelf = React.useRef(self);
+
   let hasBeenCalled = React.useRef(false);
 
   /** There might be some potential issues with willReceiveProps,
@@ -91,8 +93,8 @@ let useRecordApi = componentSpec => {
   state :=
     componentSpec.willReceiveProps(self);
 
-  let rec self = {
-    handle: (fn, payload) => fn(payload, self),
+  let self = {
+    handle: (fn, payload) => fn(payload, upToDateSelf->current),
     send,
     state: state^,
     onUnmount: sideEffect =>
@@ -142,6 +144,8 @@ let useRecordApi = componentSpec => {
 
   let mostRecentAllowedRender =
     React.useRef(React.useMemo0(() => componentSpec.render(self)));
+
+  upToDateSelf->setCurrent(self);
 
   if (hasBeenCalled->current
       && componentSpec.shouldUpdate({
