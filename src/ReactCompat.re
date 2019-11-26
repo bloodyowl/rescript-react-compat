@@ -111,7 +111,7 @@ let useRecordApi = componentSpec => {
           Js.Array.forEach(fn => fn(), unmountSideEffects->current);
           /* shouldn't be needed but like - better safe than sorry? */
           unmountSideEffects->setCurrent([||]);
-          componentSpec.willUnmount(self);
+          componentSpec.willUnmount(upToDateSelf->React.Ref.current);
         },
       );
     });
