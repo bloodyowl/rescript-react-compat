@@ -1,3 +1,9 @@
+## 1.0.1
+
+Fixes:
+
+- Pass an up to date self to `willUnmount` (0f49043)
+
 ## 1.0.0
 
 Careful, this contains breaking changes!
