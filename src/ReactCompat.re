@@ -134,8 +134,9 @@ let useRecordApi = componentSpec => {
   React.useEffect1(
     () => {
       if (Js.Array.length(sideEffects^) > 0) {
-        Js.Array.forEach(func => func(self), sideEffects^);
+        let sideEffectsToRun = Js.Array.sliceFrom(0, sideEffects^);
         sideEffects := [||];
+        Js.Array.forEach(func => func(self), sideEffectsToRun);
       };
       None;
     },
