@@ -1,3 +1,9 @@
+## 2.0.0
+
+Changes:
+
+- Make effect management preact-safe (fe4db7b)
+
 ## 1.0.1
 
 Fixes:
