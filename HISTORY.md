@@ -1,3 +1,11 @@
+## 3.0.0
+
+Changes:
+
+- Move to ReScript (f91817a)
+- Move from reason-react to @rescript/react (f91817a)
+- Rename project to `rescript-react-compat` (f91817a)
+
 ## 2.0.0
 
 Changes:
