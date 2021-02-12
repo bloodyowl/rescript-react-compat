@@ -1,20 +1,20 @@
-# reason-react-compat
+# rescript-react-compat
 
 > An alternative upgrade path for ReasonReact
 
 ## Installation
 
 ```console
-$ yarn add reason-react-compat
+$ yarn add rescript-react-compat
 ```
 
 or
 
 ```console
-$ npm install --save reason-react-compat
+$ npm install --save rescript-react-compat
 ```
 
-Then add `reason-react-compat` to your `bsconfig.json` `bs-dependencies` field.
+Then add `rescript-react-compat` to your `bsconfig.json` `bs-dependencies` field.
 
 ## ReactCompat.useRecordApi
 
