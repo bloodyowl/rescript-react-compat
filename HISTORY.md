@@ -1,3 +1,9 @@
+## 3.0.1
+
+Fixes:
+
+- Fixed name in bsconfig (c92e2aa)
+
 ## 3.0.0
 
 Changes:
