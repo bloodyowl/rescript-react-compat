@@ -1,5 +1,5 @@
 {
-  "name": "reason-react-compat",
+  "name": "rescript-react-compat",
   "reason": {
     "react-jsx": 3
   },
