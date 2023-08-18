@@ -1,3 +1,9 @@
+## 3.0.3
+
+Changes:
+
+- Add compat with ReScript React 0.11.x (4591a8a)
+
 ## 3.0.2
 
 Fixes:
