@@ -1,3 +1,9 @@
+## 3.0.4
+
+Changes:
+
+- Add compat with React 18 (4b243ee)
+
 ## 3.0.3
 
 Changes:
